@@ -1,11 +1,512 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>大考倒计时 - 尚礼萱 & 李睿萱</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #16a085;
+            --accent: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --glow: 0 0 20px rgba(231, 76, 60, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50, #4a6fa5);
+            min-height: 100vh;
+            color: #fff;
+            line-height: 1.6;
+            padding: 20px;
+            background-attachment: fixed;
+            overflow-x: hidden;
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 30px;
+            border-radius: 40px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            margin-bottom: 25px;
+            text-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(to right, #fff, #a8dadc, #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            animation: titleGlow 2s infinite alternate;
+            letter-spacing: 3px;
+        }
+
+        @keyframes titleGlow {
+            from { text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.5); }
+            to { text-shadow: 0 0 25px rgba(255, 255, 255, 0.9), 0 0 50px rgba(255, 255, 255, 0.7); }
+        }
+
+        .subtitle {
+            font-size: 1.6rem;
+            opacity: 0.95;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.8;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            letter-spacing: 1px;
+            color: #a8dadc;
+        }
+
+        .children-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .child-card {
+            background: rgba(255, 255, 255, 0.18);
+            border-radius: 45px;
+            padding: 45px;
+            box-shadow: 0 35px 65px rgba(0, 0, 0, 0.65);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            transform: perspective(1000px) rotateX(0deg);
+            transform-style: preserve-3d;
+        }
+
+        .child-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .child-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(to right, var(--primary), var(--secondary), var(--accent));
+            animation: progress 8s infinite linear;
+            z-index: 1;
+        }
+
+        @keyframes progress {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .child-name {
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin-bottom: 35px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.4);
+            letter-spacing: 2px;
+        }
+
+        .child-name i {
+            font-size: 3.8rem;
+            color: var(--accent);
+            animation: pulse 2.5s infinite;
+            text-shadow: 0 0 20px rgba(231, 76, 60, 0.8);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(231, 76, 60, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .countdown-item {
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 35px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.5s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .countdown-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: -1;
+        }
+
+        .countdown-item:hover::before {
+            opacity: 1;
+        }
+
+        .countdown-item:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 25px 55px rgba(0, 0, 0, 0.6);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .countdown-label {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            color: var(--light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        .countdown-label::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+
+        .countdown-value {
+            font-size: 4.2rem;
+            font-weight: 900;
+            color: var(--accent);
+            text-shadow: 0 6px 25px rgba(231, 76, 60, 0.7);
+            letter-spacing: 3px;
+            display: block;
+            margin: 25px 0;
+            animation: pulse 1.8s infinite;
+            position: relative;
+            z-index: 2;
+        }
+
+        .countdown-value::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(231, 76, 60, 0.3), transparent);
+            opacity: 0.6;
+            z-index: -1;
+            animation: glow 3s infinite;
+        }
+
+        @keyframes glow {
+            0% { opacity: 0.2; }
+            50% { opacity: 0.6; }
+            100% { opacity: 0.2; }
+        }
+
+        .countdown-detail {
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin-top: 20px;
+            font-weight: 700;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .countdown-icon {
+            font-size: 4.5rem;
+            margin-bottom: 25px;
+            color: var(--secondary);
+            text-shadow: 0 3px 15px rgba(22, 160, 133, 0.6);
+            animation: bounce 2.5s infinite;
+            position: relative;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .note {
+            text-align: center;
+            margin-top: 50px;
+            padding: 35px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            font-size: 1.4rem;
+            color: #a8dadc;
+            max-width: 1000px;
+            margin: 0 auto;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .note::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--secondary), var(--accent));
+            animation: progress 10s infinite linear;
+        }
+
+        .highlight {
+            color: var(--secondary);
+            font-weight: 800;
+            text-shadow: 0 0 15px rgba(22, 160, 133, 0.7);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 1400px) {
+            .children-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 3.8rem;
+            }
+            
+            .child-name {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .countdown-value {
+                font-size: 3.5rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            h1 {
+                font-size: 3.2rem;
+            }
+            
+            .child-name {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.8rem;
+            }
+            
+            .child-name {
+                font-size: 1.9rem;
+            }
+            
+            .countdown-value {
+                font-size: 2.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .countdown-value {
+                font-size: 2.3rem;
+            }
+            
+            .countdown-label {
+                font-size: 1.3rem;
+            }
+            
+            .countdown-detail {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    ABCD
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-graduation-cap"></i> 大考倒计时</h1>
+            <p class="subtitle">记录尚礼萱与李睿萱的重要考试节点，精准到秒，每秒刷新</p>
+        </header>
+
+        <div class="children-container">
+            <div class="child-card">
+                <div class="child-name">
+                    <i class="fas fa-child"></i>
+                    尚礼萱
+                </div>
+                <div class="countdown-grid">
+                    <div class="countdown-item">
+                        <div class="countdown-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <div class="countdown-label">小升初</div>
+                        <div class="countdown-value" id="shang-xiaosheng">0天 0小时 0分 0秒</div>
+                        <div class="countdown-detail">2027年6月15日</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <div class="countdown-label">中考</div>
+                        <div class="countdown-value" id="shang-zhongkao">0天 0小时 0分 0秒</div>
+                        <div class="countdown-detail">2030年6月25日</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="countdown-label">高考</div>
+                        <div class="countdown-value" id="shang-gaokao">0天 0小时 0分 0秒</div>
+                        <div class="countdown-detail">2033年6月7日</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="child-card">
+                <div class="child-name">
+                    <i class="fas fa-child"></i>
+                    李睿萱
+                </div>
+                <div class="countdown-grid">
+                    <div class="countdown-item">
+                        <div class="countdown-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <div class="countdown-label">小升初</div>
+                        <div class="countdown-value" id="li-xiaosheng">0天 0小时 0分 0秒</div>
+                        <div class="countdown-detail">2026年6月15日</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <div class="countdown-label">中考</div>
+                        <div class="countdown-value" id="li-zhongkao">0天 0小时 0分 0秒</div>
+                        <div class="countdown-detail">2029年6月25日</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="countdown-label">高考</div>
+                        <div class="countdown-value" id="li-gaokao">0天 0小时 0分 0秒</div>
+                        <div class="countdown-detail">2032年6月7日</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="note">
+            <p>注：小升初在六年级下学期（6月15日左右），中考固定在6月25日，高考固定在6月7日</p>
+            <p>尚礼萱升学路径：2027年小升初 → 2030年中考 → 2033年高考</p>
+            <p>李睿萱升学路径：2026年小升初 → 2029年中考 → 2032年高考</p>
+        </div>
+    </div>
+
+    <script>
+        function getTimeRemaining(endTime) {
+            const total = Date.parse(endTime) - Date.parse(new Date());
+            if (total <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+            
+            const seconds = Math.floor((total / 1000) % 60);
+            const minutes = Math.floor((total / 1000 / 60) % 60);
+            const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+            const days = Math.floor(total / (1000 * 60 * 60 * 24));
+            
+            return {
+                days,
+                hours,
+                minutes,
+                seconds
+            };
+        }
+
+        function formatTime(timeObj) {
+            return `${timeObj.days}天 ${timeObj.hours}小时 ${timeObj.minutes}分 ${timeObj.seconds}秒`;
+        }
+
+        function updateCountdown() {
+            // 尚礼萱 (五年级) - 2027年小升初
+            const shangSmall = getTimeRemaining('2027-06-15');
+            const shangMiddle = getTimeRemaining('2030-06-25');
+            const shangHigh = getTimeRemaining('2033-06-07');
+            
+            // 李睿萱 (六年级) - 2026年小升初
+            const liSmall = getTimeRemaining('2026-06-15');
+            const liMiddle = getTimeRemaining('2029-06-25');
+            const liHigh = getTimeRemaining('2032-06-07');
+            
+            document.getElementById('shang-xiaosheng').textContent = formatTime(shangSmall);
+            document.getElementById('shang-zhongkao').textContent = formatTime(shangMiddle);
+            document.getElementById('shang-gaokao').textContent = formatTime(shangHigh);
+            
+            document.getElementById('li-xiaosheng').textContent = formatTime(liSmall);
+            document.getElementById('li-zhongkao').textContent = formatTime(liMiddle);
+            document.getElementById('li-gaokao').textContent = formatTime(liHigh);
+        }
+
+        // 初始更新
+        updateCountdown();
+        
+        // 每秒更新
+        setInterval(updateCountdown, 1000);
+    </script>
 </body>
 </html>
